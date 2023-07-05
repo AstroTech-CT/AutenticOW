@@ -1,15 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Lcobucci\JWT\Parser;
 use Illuminate\Support\Facades\Validator;
-
-
 
 
 class UserController extends Controller
@@ -41,12 +38,21 @@ class UserController extends Controller
         $user->password = Hash::make($request->post("password"));
         $user->last_name = $request->post("last_name");
         $user->username = $request->post("username");
-        $user->cedula = $request->post("ci");
-        $user->phone_number = $request->post("phone");
+        $user->ci = $request->post("ci");
+        $user->phone = $request->post("phone");
         $user->save();
         return $user; 
     }
 
+
+    public function Login(Request $request){
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) 
+            return redirect("/");
+        return redirect("/login")->with("failed",true);
+    }
+
+    
     public function ValidateToken(Request $request){
         return auth('api')->user();
     }
