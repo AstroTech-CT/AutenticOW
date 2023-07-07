@@ -18,8 +18,8 @@ class UserTest extends TestCase
 
 
     // Client creado desde seeders
-     private $clientId = 100;
-     private $clientSecret = "wsBa0mp4jwSTYssUGHX5xoqD9IC0X95Gfpg0w3uY";
+     private $clientId = 1;
+     private $clientSecret = "7sI9PYW8pi5dcAjvsd5I8amZS76gmLXLwA3XKXA7";
 
      // Usuario creado desde seeders
      private $userName = "usuario@email.com";
