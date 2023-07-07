@@ -1,0 +1,24 @@
+version: "3.5"
+services:
+  mysql:
+    image: mysql
+    container_name: mysql_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root 
+      - MYSQL_DATABASE=tecnobyte_db
+    volumes:
+      - "./mysql:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+ 
+  api:
+    depends_on:  
+      - mysql
+    image: ggmartinez/laravel:php-82
+    container_name: autenticacion_api 
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./:/app"
+
+  

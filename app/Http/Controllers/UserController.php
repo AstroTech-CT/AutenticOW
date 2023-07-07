@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -10,12 +10,9 @@ use Lcobucci\JWT\Parser;
 use Illuminate\Support\Facades\Validator;
 
 
-
-
 class UserController extends Controller
 {
-    public function Register(Request $request)
-    {
+    public function Register(Request $request){
         $validation = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',
@@ -33,20 +30,33 @@ class UserController extends Controller
         return $this->createUser($request);
     }
 
-    private function createUser($request)
-    {
+    private function createUser($request) {
         $user = new User();
         $user->name = $request->post("name");
         $user->email = $request->post("email");
         $user->password = Hash::make($request->post("password"));
         $user->last_name = $request->post("last_name");
         $user->username = $request->post("username");
-        $user->cedula = $request->post("ci");
-        $user->phone_number = $request->post("phone");
+        $user->ci = $request->post("ci");
+        $user->phone = $request->post("phone");
         $user->save();
         return $user; 
     }
 
+
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $user = $request->user();
+            $token = $user->createToken('Personal Access Token')->accessToken;
+            return response()->json(['token' => $token], 200);
+        }
+
+        return response()->json(['error' => 'Credenciales invalidas'], 401);
+    }
+    
     public function ValidateToken(Request $request){
         return auth('api')->user();
     }
