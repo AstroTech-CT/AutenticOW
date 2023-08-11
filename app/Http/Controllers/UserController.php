@@ -44,17 +44,25 @@ class UserController extends Controller
     }
 
 
-    public function login(Request $request)
-    {
+    public function login(Request $request) {
+
+        $request->validate([
+            
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            $user = $request->user();
-            $token = $user->createToken('Personal Access Token')->accessToken;
+            $user = Auth::user();
+            $token = $user->createToken('MyApp')->accessToken;
             return response()->json(['token' => $token], 200);
         }
 
-        return response()->json(['error' => 'Credenciales invalidas'], 401);
+        throw ValidationException::withMessages([
+            'email' => ['The provided credentials are incorrect.'],
+        ]);
     }
     
     public function ValidateToken(Request $request){

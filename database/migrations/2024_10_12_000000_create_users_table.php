@@ -22,10 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->string('username')->unique();
             $table->boolean('reportado')->default(false);
-            $table->boolean('suspendido')->default(false);
-            $table->foreign('id_publicaciones')->references('id')->on('publicaciones');
-            $table->foreign('id_comments')->references('id')->on('comments');
-            $table->foreign('id_likes')->references('id')->on('likes');
+            $table->boolean('suspendido')->default(false);   
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
