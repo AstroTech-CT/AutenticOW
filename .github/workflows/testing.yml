@@ -1,0 +1,47 @@
+name: Testing
+on:
+  push:
+    branches-ignore: [ "main,dev" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  EjecutarTests:
+    runs-on: self-hosted
+    container:
+      image: ggmartinez/laravel:php-82
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: laravel
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+    - name: Install Dependencies
+      run: composer install
+
+    - name: Generate key
+      run: php artisan key:generate
+
+    - name: Run migrations
+      env:
+        DB_HOST: mysql
+      run: php artisan migrate
+
+    - name: Seed Database
+      env:
+        DB_HOST: mysql
+      run: php artisan db:seed
+
+    - name: Execute tests (Unit and Feature tests) via PHPUnit
+      env:
+        DB_HOST: mysql
+      run: php artisan test
