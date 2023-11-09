@@ -1,0 +1,36 @@
+version: '3.5'
+services:
+  apiPost:
+    image: ggmartinez/laravel:php-82
+    container_name: apiPost-container
+    volumes:
+       - "./:/app"
+    ports:
+      - "8000:8000"
+
+  autenticacion:
+    image: ggmartinez/laravel:php-82
+    container_name: autenticacion-container
+    volumes:
+       - "./:/app"
+    ports:
+       - "8001:8001"
+
+  backoffice:
+    image: ggmartinez/laravel:php-82
+    container_name: backoffice-container
+    volumes:
+       - "./:/app"
+    ports:
+       - "8002:8002"
+
+  mysql:
+    image: mysql
+    container_name: mysql_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root 
+      - MYSQL_DATABASE=tecnobyte_db
+    volumes:
+       - "./mysql:/var/lib/mysql"
+    ports:
+      - "3306:3306"
